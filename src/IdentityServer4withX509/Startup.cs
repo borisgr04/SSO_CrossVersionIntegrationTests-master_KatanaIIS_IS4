@@ -15,8 +15,7 @@ namespace IdentityServer4withX509
             services.AddIdentityServer()
                 .AddSigningCredential(new X509Certificate2(certPath))
                 .AddInMemoryApiResources(Config.GetApis())
-                .AddInMemoryClients(Config.GetClients())
-                .AddWsFederation();
+                .AddInMemoryClients(Config.GetClients());
         }
 
         public void Configure(IApplicationBuilder app)

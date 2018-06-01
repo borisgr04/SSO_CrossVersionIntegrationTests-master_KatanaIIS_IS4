@@ -53,8 +53,14 @@ namespace TestClient
                         Description = "Katana/IIS WebApi Boris Instalado",
                         ClientId = "client",
                         Url = "http://localhost/"
+                    },
+                    new Api
+                    {
+                        Description = "Katana/IIS Ejemplo WebApi ANibal",
+                        ClientId = "client",
+                        Url = "http://localhost:60559"
                     }
-
+                    //
                 }
             },
             //new TestCase
