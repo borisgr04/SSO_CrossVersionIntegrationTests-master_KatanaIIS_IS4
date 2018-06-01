@@ -1,4 +1,8 @@
-# CrossVersionIntegrationTests
+# SSO_CrossVersionIntegrationTests-master_KatanaIIS_IS4
+Este proyecto esta basado en CrossVersionIntegrationTests-master
+Y Se implementa un Api basada en Katana/IIS protegida por IS4
+
+# Est CrossVersionIntegrationTests
 Test harness to ensure IdentityServer 3/4 compatibility
 
 Please run every project as self-hosted.
