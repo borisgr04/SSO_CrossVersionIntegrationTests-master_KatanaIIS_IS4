@@ -18,39 +18,51 @@ Para crear un Proyecto WebApi .Net Framework compatible se debe realizar los sig
 
 # 3. Crear una Clase Owin Startup class
 
-        using System;
-        using System.Threading.Tasks;
-        using System.Web.Http;
-        using IdentityServer3.AccessTokenValidation;
-        using Microsoft.Owin;
-        using Owin;
+    using System;
+    using System.Collections.Generic;
+    using System.IdentityModel.Tokens;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Cors;
+    using IdentityServer3.AccessTokenValidation;
+    using Microsoft.Owin;
+    using Microsoft.Owin.Security.Cookies;
+    using Owin;
 
-        [assembly: OwinStartup(typeof(KatanaIISEjemplo.Startup))]
+    [assembly: OwinStartup(typeof(WebApiNet4x.Startup))]
 
-        namespace KatanaIISEjemplo
+    namespace WebApiNet4x
+    {
+        public class Startup
         {
-            public class Startup
+            public void Configuration(IAppBuilder app)
             {
-                public void Configuration(IAppBuilder app)
+                app.UseCookieAuthentication(new CookieAuthenticationOptions());
+                DesactivarLaAsignacionPredeterminadaDeJwt();
+                app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
                 {
-                    app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-                    {
-                        Authority = "http://localhost:5000",
-                        RequiredScopes = new[] { "api" },
+                    Authority = "http://localhost:5000",
+                    RequiredScopes = new[] { "Api1" },
+                    DelayLoadMetadata = true,
+                });
 
-                        DelayLoadMetadata = true
-                    });
+                var config = new HttpConfiguration();
+                config.MapHttpAttributeRoutes();
+                config.EnableCors(new EnableCorsAttribute("*","*", "*"));
 
-                    var config = new HttpConfiguration();
-                    config.MapHttpAttributeRoutes();
+                config.Routes.MapHttpRoute(
+                    name: "DefaultApi",
+                    routeTemplate: "api/{controller}/{id}",
+                    defaults: new { id = RouteParameter.Optional }
+                    );
 
-                    config.Routes.MapHttpRoute(
-                        name: "DefaultApi",
-                        routeTemplate: "{controller}/{id}",
-                        defaults: new { id = RouteParameter.Optional }
-                        );
-                    app.UseWebApi(config);
+                app.UseWebApi(config);
 
-                }
+            }
+
+            private void DesactivarLaAsignacionPredeterminadaDeJwt()
+            {
+                JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
             }
         }
+    }
